@@ -1,7 +1,8 @@
 from subprocess import run, PIPE
-
-import yaml
 from collections import Mapping
+from typing import Tuple
+import yaml
+
 
 # TODO Support writing/changing the credentials file
 
@@ -14,13 +15,20 @@ class Credentials(Mapping):
         self.__data = None
 
     def __getitem__(self, item):
-        self.data[item]
+        return self.data[item]
 
     def __iter__(self):
         yield from self.data
 
     def __len__(self):
         return len(self.data)
+
+    @property
+    def auth(self) -> Tuple(str, str):
+        """
+        Returns an auth tuple - `(username, password)` - to use, for example, with requests.
+        """
+        return self.username, self.password
 
     @property
     def content(self) -> str:
@@ -79,3 +87,10 @@ class Credentials(Mapping):
         if self.__password is None:
             self.__password = self.content.splitlines()[0]
         return self.__password
+
+    @property
+    def username(self) -> str:
+        """
+        Tries to get the username from the data. Returns `None` if `username` key doesn't exist.
+        """
+        return self.data.get('username')
