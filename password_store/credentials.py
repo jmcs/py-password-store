@@ -1,5 +1,5 @@
 from subprocess import run, PIPE
-from collections import Mapping
+from collections.abc import Mapping
 from typing import Tuple
 import yaml
 
